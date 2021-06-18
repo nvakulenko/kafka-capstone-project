@@ -1,2 +1,2 @@
 # kafka-capstone-project
-Data Streaming course Capstone Project
+Data Streaming course capstone project
