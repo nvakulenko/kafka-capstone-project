@@ -65,21 +65,21 @@ services:
     depends_on:
       - broker
 
-#  kafka-create-topics:
-#    container_name: create-kafka-topics
-#    image: confluentinc/cp-kafka:5.2.0
-#    depends_on:
-#      - broker
-#    hostname: kafka-create-topics
-#    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-#                       cub kafka-ready -b broker:29092 1 20 && \
-#                       kafka-topics --create --topic kafka-test --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 && \
-#                       sleep infinity'"
-#    environment:
-#      KAFKA_BROKER_ID: ignored
-#      KAFKA_ZOOKEEPER_CONNECT: ignored
-#    networks:
-#      - localnet
+  kafka-create-topics:
+    container_name: create-kafka-topics
+    image: confluentinc/cp-kafka:5.1.1
+    depends_on:
+      - broker
+    hostname: kafka-create-topics
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b broker:9092 1 20 && \
+                       kafka-topics --create --topic kafka-test --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 && \
+                       sleep infinity'"
+    environment:
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+    networks:
+      - localnet
 
   mongo:
     image: "mongo:4.0-xenial"
