@@ -62,8 +62,10 @@ services:
       - localnet
     environment:
       KAFKA_BROKERCONNECT: "broker:9092"
+      SCHEMAREGISTRY_CONNECT: "http://schema-registry:8081"
     depends_on:
       - broker
+      - schema-registry
 
   kafka-create-topics:
     container_name: create-kafka-topics
@@ -90,16 +92,17 @@ services:
       - "27017:27017"
     restart: always
 
-#  producer:
-#    build:
-#      context: producer/
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080-8090"
-#    depends_on:
-#      - broker
-#    networks:
-#      - localnet
+  producer:
+    build:
+      context: producer/
+      dockerfile: Dockerfile
+    ports:
+      - "8080-8090"
+    depends_on:
+      - broker
+      - schema-registry
+    networks:
+      - localnet
 
 networks:
   localnet:
