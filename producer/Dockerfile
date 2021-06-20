@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.9-slim-buster
 COPY requirements.txt /opt/app/requirements.txt
 WORKDIR /opt/app
 COPY reddit_dataset.csv .
