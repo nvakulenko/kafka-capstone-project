@@ -6,4 +6,20 @@ CREATE STREAM redditComments (subreddit VARCHAR, body VARCHAR, controversiality 
   WITH (kafka_topic='kafka-test', value_format='avro');
   
 --get query
-SELECT * FROM redditComments WHERE subreddit = 'gameofthrones';docker exec -it ksql-cli ksql http://ksql-server:8088
+SELECT * FROM redditComments WHERE subreddit = 'gameofthrones';
+
+--count messages by subreddit
+SELECT \
+subreddit, \
+count(1) AS commentCount \
+FROM redditComments \
+WINDOW TUMBLING (SIZE 1 HOUR, GRACE PERIOD 2 HOURS) \
+GROUP BY subreddit;
+
+--select to table
+CREATE TABLE subredditMessages AS \
+   SELECT \
+      subreddit, \
+      count(1) AS commentCount \
+   FROM redditComments \
+   GROUP BY subreddit;
