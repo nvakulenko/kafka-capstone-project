@@ -1,0 +1,9 @@
+--connect to docker container
+docker exec -it ksql-cli ksql http://ksql-server:8088
+
+--create input stream
+CREATE STREAM redditComments (subreddit VARCHAR, body VARCHAR, controversiality VARCHAR, score VARCHAR) \
+  WITH (kafka_topic='kafka-test', value_format='avro');
+  
+--get query
+SELECT * FROM redditComments WHERE subreddit = 'gameofthrones';
