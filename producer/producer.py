@@ -56,8 +56,6 @@ with open(filepath, encoding="utf8") as file:
     reader = csv.DictReader(file)
     for row in reader:
         avroProducer.poll(0)
-        value = row
-        key = {"id": reader.line_num}
-        avroProducer.produce(topic='kafka-test', value=value, key=key)
+        avroProducer.produce(topic='comments-stream', value=row, key={"id": reader.line_num})
 
 avroProducer.flush()
