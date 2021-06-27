@@ -1,4 +1,4 @@
-package tutorial;
+package ua.edu.ucu;
 
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 public class CreateTopic {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         Properties properties = new Properties();
-        properties.put("bootstrap.servers", "localhost:29092");
+        properties.put("bootstrap.servers", "broker:9092");
         Admin admin = Admin.create(properties);
         NewTopic newTopic = new NewTopic("sentiment-out", 1, (short)1); //new NewTopic(topicName, numPartitions, replicationFactor)
 

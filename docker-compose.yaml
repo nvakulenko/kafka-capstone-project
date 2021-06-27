@@ -141,6 +141,13 @@ services:
     networks:
       - localnet
 
+  sentiment-detection-service:
+    container_name: sentiment-detection-service
+    build:
+      context: sentiment-detection-service/
+    networks:
+      - localnet
+
 networks:
   localnet:
     attachable: true
