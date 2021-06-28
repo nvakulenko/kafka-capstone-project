@@ -1,10 +1,9 @@
 from confluent_kafka import avro
 from confluent_kafka.avro import AvroConsumer, AvroProducer
 from confluent_kafka.avro.serializer import SerializerError
-from google_trans_new import google_translator
+from langdetect import detect
 import requests
 
-detector = google_translator(timeout=10)
 
 c = AvroConsumer({
     'bootstrap.servers': 'broker:9092',
@@ -84,7 +83,7 @@ while True:
         continue
 
     msg_val = msg.value()
-    detect_result = detector.detect(msg_val['body'])
+    detect_result = detect(msg_val['body'])
     msg_val['lang'] = detect_result[0]
     print(msg_val)
     avroProducer.poll(0)
