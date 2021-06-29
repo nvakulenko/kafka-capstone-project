@@ -83,12 +83,19 @@ while True:
         continue
 
     msg_val = msg.value()
-    detect_result = detect(msg_val['body'])
-    msg_val['lang'] = detect_result[0]
+
+    try:
+        detect_result = detect(msg_val['body'])
+        msg_val['lang'] = detect_result
+
+    except:
+        msg_val['lang'] = 'undefined'
+
     print(msg_val)
     avroProducer.poll(0)
     avroProducer.produce(topic='lang-stream', value=msg_val, key={"id": index})
     index += 1
+
 
 avroProducer.flush()
 c.close()
