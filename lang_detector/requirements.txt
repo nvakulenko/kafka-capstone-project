@@ -1,0 +1,5 @@
+confluent_kafka
+requests
+avro
+langdetect
+iso-639

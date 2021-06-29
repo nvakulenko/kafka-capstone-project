@@ -148,6 +148,18 @@ services:
     networks:
       - localnet
 
+  lang_detector:
+    build:
+      context: lang_detector/
+      dockerfile: Dockerfile
+    ports:
+      - "8060-8070"
+    depends_on:
+      - broker
+      - schema-registry
+    networks:
+      - localnet
+
 networks:
   localnet:
     attachable: true
