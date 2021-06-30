@@ -83,13 +83,13 @@ object RAKE {
   def run(text: String): List[(String, Double)] = {
     val listOfSentences = splitTextToSentences(text)
     val listOfPhrases = generateCandidateKeywords(listOfSentences)
-    println(listOfPhrases)
+//    println(listOfPhrases)
     val wordScores = calculateWordScores(listOfPhrases)
-    println(wordScores)
+//    println(wordScores)
     val phraseScores = calculateScoresForPhrase(listOfPhrases, wordScores)
-    println(phraseScores)
+//    println(phraseScores)
     val orderedPhrases = phraseScores.toList.sortBy(x => x._2).reverse
-    println(orderedPhrases)
+//    println(orderedPhrases)
     orderedPhrases
   }
 

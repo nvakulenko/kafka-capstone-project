@@ -1,14 +1,23 @@
 package ua.edu.ucu
 
 object Main extends App {
-//  createTopic()
+  val kafkaBrokerURL = sys.env.get("KAFKA_BROKER_URL").getOrElse("localhost:29092")
+  val schemaRegistryURL = sys.env.get("SCHEMA_REGISTRY_URL").getOrElse("http://localhost:8081")
+  val applicationId = sys.env.get("APPLICATION_ID").getOrElse("keyword-detection-service")
+  val readTopic = sys.env.get("READ_TOPIC").getOrElse("comments-stream")
+  val writeTopic = sys.env.get("WRITE_TOPIC").getOrElse("keyword-stream22")
 
-//  KeywordDetectionService(
-//    "localhost:29092",
-//    "http://localhost:8081",
-//    "keyword-detection-service",
-//    "write-topic"
-//  )
+  println("KAFKA_BROKER_URL" ,kafkaBrokerURL)
+  println("SCHEMA_REGISTRY_URL", schemaRegistryURL)
+  println("APPLICATION_ID", applicationId)
+  println("READ_TOPIC", readTopic)
+  println("WRITE_TOPIC", writeTopic)
 
-  println(RAKE.run("It's pretty well known and it was a paid product placement. Hamilton advertised the watch around the movie and had an Interstellar page on their website. The biggest product placement was the Carhartt jacket though.   Brands send old merch all the time by the way for movies. Just watch Stranger Things for tons of examples of that. Eggos are prominently featured as Eleven's favorite food"))
+  KeywordDetectionService(
+    kafkaBrokerURL,
+    schemaRegistryURL,
+    applicationId,
+    readTopic,
+    writeTopic
+  )
 }
