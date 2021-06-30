@@ -5,7 +5,7 @@ import logging
 import json
 import pprint
 
-required_topic = 'lang-stream'
+required_topic = 'sentiment-out'
 
 logging.basicConfig(level=logging.INFO)
 admin_client = AdminClient({'bootstrap.servers': 'localhost:29092'})
@@ -20,14 +20,14 @@ while required_topic not in topics:
 
 # create ksql stream
 try:
-    client.create_stream(table_name='languagesStream',
-                         columns_type=['subreddit VARCHAR', 'body VARCHAR', 'controversiality VARCHAR', 'score VARCHAR', 'lang VARCHAR'],
+    client.create_stream(table_name='sentimentsStream',
+                         columns_type=['sentiment VARCHAR'],
                          topic=required_topic,
-                         value_format='avro')
+                         value_format='DELIMITED')
 except:
     logging.info("Stream was already created")
 
-test_query = client.query("SELECT lang, COUNT(*) AS qty FROM languagesStream GROUP BY lang EMIT CHANGES LIMIT 5000")
+test_query = client.query("SELECT sentiment, COUNT(*) AS qty FROM sentimentsStream GROUP BY sentiment EMIT CHANGES LIMIT 5000")
 result = dict()
 
 try:
