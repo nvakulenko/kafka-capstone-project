@@ -59,3 +59,4 @@ Link to the file: https://github.com/nvakulenko/kafka-capstone-project/blob/main
 ### Number of messages among sentiment classes
 ![Screenshot](https://raw.githubusercontent.com/nvakulenko/kafka-capstone-project/main/doc/sentimentStream.png)
 ### Top 10 keywords
+![Screenshot](https://raw.githubusercontent.com/nvakulenko/kafka-capstone-project/main/doc/keywordsStream.png)
