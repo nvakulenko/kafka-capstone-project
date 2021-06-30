@@ -149,6 +149,22 @@ services:
     networks:
       - localnet
 
+  keyword-detection-service:
+    build:
+      context: keyword-detection-service/docker/stage/
+      dockerfile: Dockerfile
+    depends_on:
+      - broker
+      - schema-registry
+    networks:
+      - localnet
+    environment:
+      WRITE_TOPIC: "keyword-stream"
+      READ_TOPIC: "comments-stream"
+      APPLICATION_ID: "keyword-detection-service232"
+      SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      KAFKA_BROKER_URL: "broker:9092"
+
 networks:
   localnet:
     attachable: true

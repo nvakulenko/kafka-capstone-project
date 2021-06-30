@@ -8,6 +8,9 @@ resolvers ++= Seq(
     Resolver.mavenLocal
 )
 
+enablePlugins(JavaAppPackaging)
+
+
 lazy val root = (project in file("."))
   .settings(
     name := "keyword-detection-service",

@@ -1,25 +1,24 @@
 package ua.edu.ucu
 
-import com.sksamuel.avro4s.{Record, RecordFormat}
+import com.sksamuel.avro4s.RecordFormat
 import org.apache.kafka.streams.scala.kstream.{Consumed, Produced}
 import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
-import io.confluent.kafka.streams.serdes.avro.{GenericAvroSerde, SpecificAvroSerde}
-import org.apache.avro.generic.{GenericRecord, GenericRecordBuilder}
+import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
+import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.streams.scala._
-
 import java.util.{Collections, Properties}
 
 sealed case class SubredditKey(id: Int)
 sealed case class Subreddit(subreddit: String, body: String, controversiality: String, score: String)
 
-sealed case class Key(id: Int)
-sealed case class Value(value: String)
+sealed case class KeywordsKey(id: Int)
+sealed case class KeywordsValue(keywords: List[String])
 
 object KeywordDetectionService {
-  def apply(brokerUrl: String, schemaRegistryUrl: String, readTopic: String, writeToTopic: String): Unit = {
+  def apply(brokerUrl: String, schemaRegistryUrl: String, applicationId: String, readTopic: String, writeToTopic: String): Unit = {
     val props: Properties = {
       val p = new Properties()
-      p.put(StreamsConfig.APPLICATION_ID_CONFIG, readTopic)
+      p.put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId)
       p.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl)
       p.put("schema.registry.url", schemaRegistryUrl)
       p.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, classOf[GenericAvroSerde])
@@ -28,12 +27,7 @@ object KeywordDetectionService {
     }
 
     val serdeConfig = Collections.singletonMap("schema.registry.url", schemaRegistryUrl)
-
-
-
-    val builder: StreamsBuilder = new StreamsBuilder
-
-    implicit val consumed = {
+    implicit val consumed: Consumed[GenericRecord, GenericRecord] = {
       val keyGenericAvroSerde = {
         val s = new GenericAvroSerde
         s.configure(serdeConfig, true) // `true` for record keys
@@ -65,8 +59,8 @@ object KeywordDetectionService {
       Produced.`with`(keyGenericAvroSerde, valueGenericAvroSerde)
     }
 
-    val messages = builder.stream[GenericRecord, GenericRecord]("comments-stream")
-
+    val builder: StreamsBuilder = new StreamsBuilder
+    val messages = builder.stream[GenericRecord, GenericRecord](readTopic)
 
     messages
       .map((k, v) => {
@@ -80,22 +74,29 @@ object KeywordDetectionService {
         (key, value)
       })
       .map((k, v) => {
-        println(k)
-        println(v)
+        val results = RAKE.run(v.body)
 
-        val kk = Key(1)
-        val a = RecordFormat[Key]
+        println("received", k, v)
 
-        val vv = Value("ser")
-        val va = RecordFormat[Value]
-        (a.to(kk).asInstanceOf[GenericRecord], va.to(vv).asInstanceOf[GenericRecord])
+        (KeywordsKey(k.id), KeywordsValue(results.slice(0, 2).map(_._1)))
       })
-      .to("tests")
-//      .print(Printed.toSysOut)
+      .map((keywordsKey, keywordsValue) => {
+        val recordsKey = RecordFormat[KeywordsKey]
+        val recordsValue = RecordFormat[KeywordsValue]
+
+        println("send",
+          recordsKey.to(keywordsKey).asInstanceOf[GenericRecord],
+          recordsValue.to(keywordsValue).asInstanceOf[GenericRecord]
+        )
+
+        (
+          recordsKey.to(keywordsKey).asInstanceOf[GenericRecord],
+          recordsValue.to(keywordsValue).asInstanceOf[GenericRecord]
+        )
+      })
+      .to(writeToTopic)
 
     val streams: KafkaStreams = new KafkaStreams(builder.build(), props)
     streams.start()
-
-//    streams.close()
   }
 }
