@@ -1,3 +1,4 @@
+package ua.edu.ucu;
 
 import io.confluent.ksql.api.client.BatchedQueryResult;
 import io.confluent.ksql.api.client.Client;
@@ -5,6 +6,7 @@ import io.confluent.ksql.api.client.ClientOptions;
 import io.confluent.ksql.api.client.ExecuteStatementResult;
 import io.confluent.ksql.api.client.Row;
 import io.confluent.ksql.api.client.StreamInfo;
+import io.confluent.ksql.api.client.TopicInfo;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -19,21 +21,23 @@ public class SentimentsReporterApplication {
   private static final String SENTIMENT_TOPIC_NAME = "sentiment-out";
 
   public static void main(final String[] args) {
+
+    LOGGER.info("Starting SentimentsReporterApplication...");
+
     ClientOptions options = ClientOptions.create()
         .setHost("ksql-server")
         .setPort(8088);
     Client client = Client.create(options);
 
     try {
-      List<StreamInfo> streams = client.listStreams().get(4L, TimeUnit.SECONDS);
+      List<TopicInfo> topicInfos = client.listTopics().get(6L, TimeUnit.SECONDS);
 
-      for (StreamInfo stream : streams) {
-        System.out.println(
-            stream.getName()
-                + " " + stream.getTopic()
-                + " " + stream.getKeyFormat()
-                + " " + stream.getValueFormat()
-                + " " + stream.isWindowed()
+      for (TopicInfo topicInfo : topicInfos) {
+        LOGGER.info(
+            topicInfo.getName()
+                + " " + topicInfo.getName()
+                + " " + topicInfo.getPartitions()
+                + " " + topicInfo.getReplicasPerPartition()
         );
       }
       // Send requests with the client by following the other examples
@@ -50,18 +54,20 @@ public class SentimentsReporterApplication {
       // Wait for query result
       List<Row> resultRows = batchedQueryResult.get();
 
-      System.out.println("Received results. Num rows: " + resultRows.size());
+      LOGGER.info("Received results. Num rows: " + resultRows.size());
       for (Row row : resultRows) {
-        System.out.println("Row: " + row.values());
+        LOGGER.info("Row: " + row.values());
       }
 
-      // cleanup drop streams
+      // cleanup drop topicInfos
       client.executeQuery("DROP STREAM sentiments_stream6;").get();
     } catch (Exception e) {
       LOGGER.error(e.getLocalizedMessage(), e);
     } finally {
       // Terminate any open connections and close the client
       client.close();
+
+      LOGGER.info("Exit SentimentsReporterApplication...");
     }
   }
 

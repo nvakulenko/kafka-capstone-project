@@ -26,7 +26,7 @@ public class SentimentDetectionApplication {
 
     public static void main(String args[]) {
         TextAnalyticsClient textAnalyticsClient = new TextAnalyticsClientBuilder()
-            .credential(new AzureKeyCredential(""))
+            .credential(new AzureKeyCredential("48bccf3b94f945d2a837ed994adebe30"))
             .endpoint("https://solomiya-text-api.cognitiveservices.azure.com/")
             .buildClient();
 
