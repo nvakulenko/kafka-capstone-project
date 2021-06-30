@@ -48,6 +48,7 @@ Pythos script with executes ksql queries against ksql-cli server. Reads topics '
 
 ## Data set
 Reddit comments .csv file with 5000 of messages.
+Link to the file: https://github.com/nvakulenko/kafka-capstone-project/blob/main/producer/reddit_dataset.csv
 
 ## How to run
 `docker-compose up --build`
