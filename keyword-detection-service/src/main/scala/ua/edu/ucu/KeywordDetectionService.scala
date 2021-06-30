@@ -1,13 +1,10 @@
 package ua.edu.ucu
 
 import com.sksamuel.avro4s.{Record, RecordFormat}
-import org.apache.kafka.streams.kstream.Printed
 import org.apache.kafka.streams.scala.kstream.{Consumed, Produced}
 import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
 import io.confluent.kafka.streams.serdes.avro.{GenericAvroSerde, SpecificAvroSerde}
-import org.apache.avro.Schema
 import org.apache.avro.generic.{GenericRecord, GenericRecordBuilder}
-import org.apache.avro.specific.{SpecificData, SpecificRecord}
 import org.apache.kafka.streams.scala._
 
 import java.util.{Collections, Properties}
