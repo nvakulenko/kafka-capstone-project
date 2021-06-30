@@ -148,6 +148,13 @@ services:
     networks:
       - localnet
 
+  sentiments-reporter-java:
+    container_name: sentiments-reporter-java
+    build:
+      context: sentiments-reporter-java/
+    networks:
+      - localnet
+
   lang_detector:
     build:
       context: lang_detector/
