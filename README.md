@@ -5,7 +5,7 @@ Project A. E2E data processing pipeline - processing social media data (reddit)
 Dmytro Voloshyniuk, Solomia Branets, Diana Dmytrashko, Andriy Vedilin, Nataliia Vakulenko
 
 ## High component level architecture
-
+![Diagram](https://raw.githubusercontent.com/nvakulenko/kafka-capstone-project/main/doc/kafka-reddit.jpg)
 
 ## Components
 
@@ -48,12 +48,14 @@ Pythos script with executes ksql queries against ksql-cli server. Reads topics '
 
 ## Data set
 Reddit comments .csv file with 5000 of messages.
+Link to the file: https://github.com/nvakulenko/kafka-capstone-project/blob/main/producer/reddit_dataset.csv
 
 ## How to run
 `docker-compose up --build`
 
 ## Results
 ### List of languages with numbers of messages 
-
+![Screenshot](https://raw.githubusercontent.com/nvakulenko/kafka-capstone-project/main/doc/langStream.png)
 ### Number of messages among sentiment classes
+![Screenshot](https://raw.githubusercontent.com/nvakulenko/kafka-capstone-project/main/doc/sentimentStream.png)
 ### Top 10 keywords
