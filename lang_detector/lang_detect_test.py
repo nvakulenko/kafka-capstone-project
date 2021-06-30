@@ -2,6 +2,7 @@ from confluent_kafka import avro
 from confluent_kafka.avro import AvroConsumer, AvroProducer
 from confluent_kafka.avro.serializer import SerializerError
 from langdetect import detect
+from iso639 import languages
 import requests
 
 
@@ -83,12 +84,20 @@ while True:
         continue
 
     msg_val = msg.value()
-    detect_result = detect(msg_val['body'])
-    msg_val['lang'] = detect_result[0]
+
+    try:
+        detect_result = detect(msg_val['body'])
+        detect_result = languages.get(part1=detect_result)
+        msg_val['lang'] = detect_result.name
+
+    except:
+        msg_val['lang'] = 'undefined'
+
     print(msg_val)
     avroProducer.poll(0)
     avroProducer.produce(topic='lang-stream', value=msg_val, key={"id": index})
     index += 1
+
 
 avroProducer.flush()
 c.close()
