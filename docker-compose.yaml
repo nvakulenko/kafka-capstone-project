@@ -53,12 +53,11 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.1.1
+    image: confluentinc/cp-ksql-server:latest
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
       - broker
-#      - connect
     ports:
       - "8088:8088"
     networks:
@@ -77,11 +76,10 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.1.1
+    image: confluentinc/cp-ksql-cli:latest
     container_name: ksql-cli
     depends_on:
       - broker
-#      - connect
       - ksql-server
     networks:
       - localnet
@@ -119,15 +117,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: ignored
     networks:
       - localnet
-
-  mongo:
-    image: "mongo:4.0-xenial"
-    container_name: mongo
-    networks:
-      - localnet
-    ports:
-      - "27017:27017"
-    restart: always
 
   producer:
     build:
