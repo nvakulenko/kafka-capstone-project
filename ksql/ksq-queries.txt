@@ -1,0 +1,5 @@
+--connect to docker container
+docker exec -it ksql-cli ksql http://ksql-server:8088
+
+--create input stream for keywords
+CREATE STREAM keywordsSelectorNew (keywords ARRAY<STRING>) WITH (KAFKA_TOPIC='keyword-stream', VALUE_FORMAT='avro');
